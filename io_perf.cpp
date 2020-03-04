@@ -16,9 +16,7 @@ using namespace cppfs;
 void mkdir_(const std::string &path) {
   FileHandle test_dir = fs::open(path);
   // Check type
-  if (test_dir.exists())
-    std::cerr << path << " already exists" << std::endl;
-  else {
+  if (!test_dir.exists()) {
     test_dir.createDirectory();
   }
 }
@@ -131,17 +129,12 @@ double randomIo(unsigned n, unsigned ht,
   return sum;
 }
 
-void all_test(unsigned n, unsigned ht_max, const std::string &test_dir) {
-  generateTestFiles<float>(n, ht_max, test_dir);
+void all_test(unsigned n, unsigned ht, const std::string &test_dir) {
+  generateTestFiles<float>(n, ht, test_dir);
   std::cout << "n,ht,time_per_io,res\n";
-  std::vector<unsigned> file_nums{1, 10, 20, 50, 100, 200};
-
-  for (const auto ht : file_nums) {
-    if (ht > ht_max) break;
-    auto res = randomIo<float>(n, ht, test_dir);
-    std::cout << n << "," << ht << "," << (IO_TIME / MAX_IO) << "," << res
-              << "\n";
-  }
+  auto res = randomIo<float>(n, ht, test_dir);
+  std::cout << n << "," << ht << "," << (IO_TIME / MAX_IO) << "," << res
+            << "\n";
 }
 
 int main(int argc, char **argv) {
@@ -154,7 +147,7 @@ int main(int argc, char **argv) {
   app.add_option("-n", n, "Number of points in each file");
 
   unsigned m = 100;
-  app.add_option("-m", m, "Maximum number of file");
+  app.add_option("-m", m, "Number of file");
 
   CLI11_PARSE(app, argc, argv);
 
