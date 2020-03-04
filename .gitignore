@@ -1,0 +1,7 @@
+.vscode
+.clang-format
+io_perf
+*.tex
+
+.idea
+test
